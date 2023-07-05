@@ -32,4 +32,3 @@ Run the following test with N node allocation...
 ```shell
 shell$ mpirun --np 2 ./a.out
 ```
-
