@@ -7,32 +7,29 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**System Information**
+ - example: Frontier
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**OMPI-X Release Version**
+ - example: ompix-a1
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Short description of error**
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Exact steps for others to reproduce the error**
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+Run the following test with N node allocation...
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+```
+ mpirun --bind-to core --map-by ppr:1:l3cache --np 16 ./osu_alltoall
+```
 
-**Additional context**
-Add any other context about the problem here.
+-----------------------------
+
+**Other details**
+
+*Note*: If you include verbatim output (or a code block), please use a [GitHub Markdown](https://help.github.com/articles/creating-and-highlighting-code-blocks/) code block like below:
+
+```shell
+shell$ mpirun --np 2 ./a.out
+```
+
