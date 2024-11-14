@@ -1,0 +1,55 @@
+#%Module
+proc ModulesHelp { } {
+   puts stderr "PRRTE devel-tjn (git/debug)"
+   puts stderr ""
+}
+# One line description
+module-whatis "PRRTE devel-tjn (git/debug)"
+conflict prrte
+conflict prte
+
+module load hwloc/2.7.1
+module load libevent/2.1.12-stable
+module load pmix/devel-tjn
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/prrte-devel-tjn-20241004
+
+# XXX: Update with pkg name
+# TJN: Do not want to stomp on PRTE_ namespace
+setenv OPENPRTE_DIR $PREFIX
+
+prepend-path PATH             $PREFIX/bin
+prepend-path LD_LIBRARY_PATH  $PREFIX/lib
+prepend-path PKG_CONFIG_PATH  $PREFIX/lib/pkgconfig
+
+
+######
+
+#setenv PRTE_MCA_rmaps_base_no_schedule_local 1
+# TJN: (5jul2023) remove 'routed=direct' or have problems at 256 nodes, etc.
+#setenv PRTE_MCA_routed direct
+
+
+# TJN: 1feb2023 Crusher use entire slurm allocation for mpirun
+setenv PRTE_MCA_ras_slurm_use_entire_allocation 1
+
+# TJN: 1feb2023 Crusher use srun to start HNP via slurm
+setenv PRTE_MCA_ras_base_launch_orted_on_hn 1
+
+
+# Disable tree based RSH launch
+#setenv PRTE_MCA_prte_plm_rsh_no_tree_spawn 1
+
+# TJN: 18dec2020
+#  - Slighly increase launch radix (default: 64, up to 128)
+#    this mainly improves launch time for DVM startup,
+#    should not really impact prun time
+setenv PRTE_MCA_prte_routed_radix 128
+
+
+######
+# 10feb2023: For now force only gds=hash until shmem module issues fixed
+#            (cf. https://github.com/openpmix/openpmix/issues/2967)
+#            see also whatis details for this annotation
+setenv PMIX_MCA_gds hash
+######

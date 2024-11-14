@@ -1,0 +1,23 @@
+#%Module
+proc ModulesHelp { } {
+   puts stderr "libevent v2.1.12-stable"
+   puts stderr ""
+}
+# One line description
+module-whatis "libevent v2.1.12-stable"
+conflict libevent
+
+######
+# TJN: Note using the the full 'xxx-stable' in module name
+#      to avoid collisions with Core/ modulefile name.
+######
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/libevent-2.1.12-stable-20241004
+
+# XXX: Update with pkg name
+setenv LIBEVENT_DIR $PREFIX
+
+prepend-path PATH             $PREFIX/bin
+prepend-path LD_LIBRARY_PATH  $PREFIX/lib
+prepend-path PKG_CONFIG_PATH  $PREFIX/lib/pkgconfig
+

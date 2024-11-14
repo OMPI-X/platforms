@@ -1,0 +1,17 @@
+#%Module
+proc ModulesHelp { } {
+   puts stderr "HWloc Library v2.7.1"
+   puts stderr ""
+}
+# One line description
+module-whatis "HWloc Library v2.7.1"
+conflict hwloc
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/hwloc-2.7.1-20241004
+
+setenv HWLOC_DIR $PREFIX
+
+prepend-path PATH             $PREFIX/bin
+prepend-path LD_LIBRARY_PATH  $PREFIX/lib
+prepend-path PKG_CONFIG_PATH  $PREFIX/lib/pkgconfig
+

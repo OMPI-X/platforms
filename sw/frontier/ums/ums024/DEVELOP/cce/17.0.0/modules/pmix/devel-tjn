@@ -1,0 +1,24 @@
+#%Module
+proc ModulesHelp { } {
+   puts stderr "OpenPMIx devel-tjn (git/debug)"
+   puts stderr ""
+}
+# One line description
+module-whatis "OpenPMIx devel-tjn (git/debug)"
+conflict openpmix
+conflict pmix
+
+######
+# TJN: Note using the the full 'xxx-stable' in module name
+#      to avoid collisions with Core/ modulefile name.
+######
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/openpmix-devel-tjn-20241004
+
+# XXX: Update with pkg name
+setenv OPENPMIX_DIR $PREFIX
+
+prepend-path PATH             $PREFIX/bin
+prepend-path LD_LIBRARY_PATH  $PREFIX/lib
+prepend-path PKG_CONFIG_PATH  $PREFIX/lib/pkgconfig
+

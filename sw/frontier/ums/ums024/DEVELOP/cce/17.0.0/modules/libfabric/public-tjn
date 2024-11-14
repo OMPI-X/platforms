@@ -1,0 +1,43 @@
+#%Module
+
+set moduledir [file dirname $ModulesCurrentModulefile]
+source $moduledir/.generic
+
+proc ModulesHelp { } {
+   puts stderr "Libfabric public-tjn (main/230b840d8)"
+   puts stderr "NOTE: Build using cce compiler (not gcc),"
+   puts stderr "      and with clean CFLAGS/LDFAGS to build"
+   puts stderr "      the public libfabric GitHub main (230b840d8)"
+   puts stderr "      on 11-nov-2024."
+   puts stderr ""
+   pkgnotice
+}
+# One line description
+module-whatis "Libfabric public-tjn (main/230b840d8)"
+
+# MODULE CONFIGURATIONS
+module unload libfabric
+module unload craype-network-ofi
+
+module load craype-accel-amd-gfx90a
+module load rocm/5.7.1
+module load xpmem
+
+# TJN: Load last to ensure our version wins on PKG_CONFIG_PATH search
+module load json-c/0.17
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/libfabric-public-tjn-20241111
+
+setenv LIBFABRIC_INSTALL_DIR $PREFIX
+setenv LIBFABRIC_DIR         $PREFIX
+
+prepend-path PATH            $PREFIX/bin
+prepend-path LD_LIBRARY_PATH $PREFIX/lib
+prepend-path MANPATH         $PREFIX/share/man
+prepend-path PKG_CONFIG_PATH $PREFIX/lib/pkgconfig
+
+
+setenv FI_LNX_PROV_LINKS shm+cxi
+setenv FI_LNX_DISABLE_SHM 0
+setenv FI_LNX_USE_SRQ 1
+setenv FI_SHM_USE_XPMEM 1

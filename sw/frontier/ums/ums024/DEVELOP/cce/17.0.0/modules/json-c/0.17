@@ -1,0 +1,17 @@
+#%Module
+proc ModulesHelp { } {
+   puts stderr "JSON-C Library v0.17"
+   puts stderr ""
+}
+# One line description
+module-whatis "JSON-C Library v0.17"
+conflict jsonc
+conflict json-c
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/json-c-0.17-20240802
+
+setenv JSONC_DIR $PREFIX
+
+prepend-path LD_LIBRARY_PATH  $PREFIX/lib64
+prepend-path PKG_CONFIG_PATH  $PREFIX/lib64/pkgconfig
+

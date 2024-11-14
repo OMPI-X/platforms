@@ -1,0 +1,14 @@
+
+proc pkgnotice { } {
+    puts stderr "********************************************"
+    puts stderr ""
+    puts stderr " NOTICE: Please submit issues to"
+    puts stderr "   https://github.com/OMPI-X/platforms/issues"
+    puts stderr ""
+    puts stderr "********************************************"
+}
+
+if [ module-info mode load ] {
+    pkgnotice
+}
+

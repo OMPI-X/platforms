@@ -1,0 +1,51 @@
+#%Module
+
+set moduledir [file dirname $ModulesCurrentModulefile]
+source $moduledir/.generic
+
+proc ModulesHelp { } {
+   puts stderr "Libfabric ornl-v1.20.0 (frontier-alpha-v04) DEBUG Enabled"
+   puts stderr ""
+   pkgnotice
+}
+# One line description
+module-whatis "Libfabric ornl-v1.20.0 (frontier-alpha-v04) DEBUG Enabled"
+
+# MODULE CONFIGURATIONS
+module unload libfabric
+module unload craype-network-ofi
+
+module load craype-accel-amd-gfx90a
+module load rocm/5.7.1
+module load xpmem
+
+# TJN: Load last to ensure our version wins on PKG_CONFIG_PATH search
+module load json-c/0.17
+
+set PREFIX /sw/frontier/ums/ums024/DEVELOP/cce/17.0.0/install/libfabric-ornl-v1.20.0-ompix-a4-20240806.dbg
+
+setenv LIBFABRIC_INSTALL_DIR $PREFIX
+setenv LIBFABRIC_DIR         $PREFIX
+
+prepend-path PATH            $PREFIX/bin
+prepend-path LD_LIBRARY_PATH $PREFIX/lib
+prepend-path MANPATH         $PREFIX/share/man
+prepend-path PKG_CONFIG_PATH $PREFIX/lib/pkgconfig
+
+# Libfabric module is setting this FI_xxx envvar now
+setenv FI_SHM_USE_XPMEM 1
+setenv FI_LINKX_DISABLE_SHM 0
+setenv FI_CXI_RDZV_THRESHOLD 16384
+setenv FI_CXI_RDZV_EAGER_SIZE 2048
+setenv FI_CXI_OFLOW_BUF_SIZE 12582912
+setenv FI_CXI_OFLOW_BUF_COUNT 3
+setenv FI_CXI_DEFAULT_CQ_SIZE 131072
+setenv FI_CXI_REQ_BUF_MAX_CACHED 0
+setenv FI_CXI_REQ_BUF_MIN_POSTED 6
+setenv FI_CXI_REQ_BUF_SIZE 12582912
+setenv FI_CXI_RX_MATCH_MODE software
+setenv FI_MR_CACHE_MAX_SIZE -1
+setenv FI_MR_CACHE_MAX_COUNT 524288
+setenv FI_LINKX_SRQ_SUPPORT 1
+
+

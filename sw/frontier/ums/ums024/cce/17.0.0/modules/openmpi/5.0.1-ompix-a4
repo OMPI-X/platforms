@@ -1,0 +1,94 @@
+#%Module
+proc ModulesHelp { } {
+   puts stderr "Open MPI 5.0.1 + patches (with libfabric ompix-a4)"
+   puts stderr ""
+   puts stderr "NOTE: This is built with SLURM PLM support."
+   puts stderr "NOTE: Add patch to mtl_ofi_component.c. for cxi:LINKx"
+   puts stderr "NOTE: Add patch to btl_ofi_context.c. for MPI Onsided"
+   puts stderr "NOTE: Add patch to btl_ofi_component.c. for rkey fix"
+   puts stderr ""
+}
+# One line description
+module-whatis puts stderr "Open MPI 5.0.1 + patches (with libfabric ompix-a4)"
+
+# MODULE CONFIGURATIONS
+module unload cray-mpich
+module unload cray-pmi
+module unload openmpi-devel
+module unload openmpi
+module unload craype-network-ofi
+
+#module load cray-python/3.9.13.1
+module load libfabric/ornl-v1.20.0-ompix-a4
+
+set PREFIX /sw/frontier/ums/ums024/cce/17.0.0/install/openmpi-5.0.1-ompix-a4-20240830
+
+setenv PYTHONPATH $PREFIX/lib/python3.9/site-packages/pypmix-4.2.8-py3.9-linux-x86_64.egg
+
+setenv OMPI_INSTALL_DIR $PREFIX
+setenv OMPI_DIR $PREFIX
+
+#setenv OMPI_MCA_rmaps_base_no_schedule_local 1
+
+#setenv PRTE_MCA_rmaps_base_no_schedule_local 1
+# TJN: (5jul2023) remove 'routed=direct' or have problems at 256 nodes, etc.
+#setenv PRTE_MCA_routed direct
+
+
+# TJN: 1feb2023 Crusher use entire slurm allocation for mpirun
+setenv PRTE_MCA_ras_slurm_use_entire_allocation 1
+
+# TJN: 1feb2023 Crusher use srun to start HNP via slurm
+setenv PRTE_MCA_ras_base_launch_orted_on_hn 1
+
+
+# Disable tree based RSH launch
+#setenv PRTE_MCA_prte_plm_rsh_no_tree_spawn 1
+
+# TJN: 18dec2020
+#  - Slighly increase launch radix (default: 64, up to 128)
+#    this mainly improves launch time for DVM startup,
+#    should not really impact prun time
+setenv PRTE_MCA_prte_routed_radix 128
+
+# TJN: Not sure if these are still needed with master so leaving off
+#setenv OMPI_MCA_plm_rsh_no_tree_spawn 1
+#setenv OMPI_MCA_btl_openib_warn_default_gid_prefix 0
+
+prepend-path PATH            $PREFIX/bin
+prepend-path LD_LIBRARY_PATH $PREFIX/lib
+prepend-path MANPATH         $PREFIX/share/man
+prepend-path PKG_CONFIG_PATH $PREFIX/lib/pkgconfig
+
+
+######
+# 10feb2023: For now force only gds=hash until shmem module issues fixed
+#            (cf. https://github.com/openpmix/openpmix/issues/2967)
+#            see also whatis details for this annotation
+setenv PMIX_MCA_gds hash
+######
+
+
+# Libfabric module is setting this FI_xxx envvar now
+setenv FI_SHM_USE_XPMEM 1
+setenv FI_LINKX_DISABLE_SHM 0
+setenv FI_CXI_RDZV_THRESHOLD 16384
+setenv FI_CXI_RDZV_EAGER_SIZE 2048
+setenv FI_CXI_OFLOW_BUF_SIZE 12582912
+setenv FI_CXI_OFLOW_BUF_COUNT 3
+setenv FI_CXI_DEFAULT_CQ_SIZE 131072
+setenv FI_CXI_REQ_BUF_MAX_CACHED 0
+setenv FI_CXI_REQ_BUF_MIN_POSTED 6
+setenv FI_CXI_REQ_BUF_SIZE 12582912
+setenv FI_CXI_RX_MATCH_MODE software
+setenv FI_MR_CACHE_MAX_SIZE -1
+setenv FI_MR_CACHE_MAX_COUNT 524288
+setenv FI_LINKX_SRQ_SUPPORT 1
+
+####
+# LinkX and Crusher details
+setenv OMPI_MCA_opal_common_ofi_provider_include "shm+cxi:linkx"
+setenv OMPI_MCA_btl ^tcp,openib
+setenv OMPI_MCA_pml ^ucx
+setenv OMPI_MCA_mtl ofi
+####
